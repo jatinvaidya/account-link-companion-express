@@ -25,15 +25,17 @@ app.get("/", (req, res) => {
 // enforce authentication and post id_token back
 app.get("/secure", requiresAuth(), async (req, res) => {
 	console.log(`Redirect State: ${req.query.state}`);
-	const params = new URLSearchParams();
-	params.append("id_token", req.oidc.idToken);
-	const response = await fetch(
+	const FormData = require("form-data");
+	const form = new FormData();
+	form.append("id_token", req.oidc.idToken);
+	fetch(
 		`https://${process.env.AUTH0_DOMAIN}/continue?state=${req.query.state}`,
 		{
 			method: "POST",
-			body: params,
+			body: form,
 		}
 	);
+	res.end();
 });
 
 app.listen(3000, () => {
