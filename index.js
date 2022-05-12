@@ -20,6 +20,7 @@ app.use(auth(config));
 
 // templating
 app.set("view engine", "pug");
+app.set("views", "./views");
 
 // modify requiresAuth to support query params on Authorization Request
 const requiresAuthWithParam = (req, res, next) => {
