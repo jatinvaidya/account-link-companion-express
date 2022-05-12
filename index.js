@@ -6,7 +6,7 @@ const path = require("path");
 
 const config = {
 	authRequired: false,
-	auth0Logout: true,
+	auth0Logout: false,
 	baseURL: process.env.BASE_URL,
 	clientID: process.env.CLIENT_ID,
 	issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
