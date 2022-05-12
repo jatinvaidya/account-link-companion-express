@@ -20,7 +20,6 @@ app.use(auth(config));
 
 // templating
 app.set("view engine", "pug");
-app.set("views", "./views");
 
 // modify requiresAuth to support query params on Authorization Request
 const requiresAuthWithParam = (req, res, next) => {
@@ -40,7 +39,7 @@ app.get("/", (req, res) => {
 
 // enforce authentication and post id_token back
 app.get("/secure", requiresAuthWithParam, (req, res) => {
-	res.render("form-post", {
+	res.render("./views/form-post", {
 		continue_endpoint: `https://${process.env.AUTH0_DOMAIN}/continue?state=${req.query.state}`,
 		id_token: req.oidc.idToken,
 	});
