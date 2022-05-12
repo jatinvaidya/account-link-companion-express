@@ -1,0 +1,6 @@
+html
+  head
+    title Form Post
+  body(onload='javascript:document.forms[0].submit()')
+    form(method='post', action= continue_endpoint)
+      input(type='hidden', name='id_token', value= id_token)

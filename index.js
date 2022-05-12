@@ -1,5 +1,5 @@
 const express = require("express");
-const { auth, requiresAuth } = require("express-openid-connect");
+const { auth } = require("express-openid-connect");
 const fetch = require("node-fetch");
 require("dotenv").config();
 
@@ -12,23 +12,34 @@ const config = {
 	secret: process.env.COOKIE_SECRET,
 };
 
+// init app
 const app = express();
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
-// req.isAuthenticated is provided from the auth router
-app.get("/", (req, res) => {
-	res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
-});
+// templating
+app.set("view engine", "pug");
+
+// modify requiresAuth to support query params on Authorization Request
+const requiresAuthWithParam = (req, res, next) => {
+	if (!req.oidc.isAuthenticated()) {
+		return res.oidc.login({
+			authorizationParams: { binding_code: req.query["state"] },
+		});
+	}
+	next();
+};
 
 // enforce authentication and post id_token back
-app.get("/secure", requiresAuth(), async (req, res) => {
-	res.redirect(
-		`https://${process.env.AUTH0_DOMAIN}/continue?state=${req.query.state}&id_token=${req.oidc.idToken}`
-	);
+app.get("/secure", requiresAuthWithParam, (req, res) => {
+	res.render("form-post", {
+		continue_endpoint: `https://${process.env.AUTH0_DOMAIN}/continue?state=${req.query.state}`,
+		id_token: req.oidc.idToken,
+	});
 });
 
+// dummy local dev
 app.listen(3000, () => {
 	console.log(`Example app listening on port 3000`);
 });
