@@ -2,6 +2,7 @@ const express = require("express");
 const { auth } = require("express-openid-connect");
 const fetch = require("node-fetch");
 require("dotenv").config();
+const path = require("path");
 
 const config = {
 	authRequired: false,
