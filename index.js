@@ -27,7 +27,7 @@ app.set("views", path.join(__dirname, ".", "views"));
 const requiresAuthWithParam = (req, res, next) => {
 	if (!req.oidc.isAuthenticated()) {
 		return res.oidc.login({
-			authorizationParams: { binding_code: req.query["state"] },
+			authorizationParams: { binding_code: req.query.state },
 		});
 	}
 	next();
@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
 	);
 });
 
-// enforce authentication and post id_token back
+// enforce authentication and post id_token back to auth0 rules-pipeline
 app.get("/secure", requiresAuthWithParam, (req, res) => {
 	res.render("form-post", {
 		continue_endpoint: `https://${process.env.AUTH0_DOMAIN}/continue?state=${req.query.state}`,
