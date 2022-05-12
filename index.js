@@ -33,7 +33,7 @@ const requiresAuthWithParam = (req, res, next) => {
 
 app.get("/", (req, res) => {
 	res.send(
-		req.oidc.isAuthenticated ? "Authenticated" : "UnAuthenticated/Logged out"
+		req.oidc.isAuthenticated() ? "Authenticated" : "UnAuthenticated/Logged out"
 	);
 });
 
