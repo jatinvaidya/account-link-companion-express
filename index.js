@@ -31,6 +31,12 @@ const requiresAuthWithParam = (req, res, next) => {
 	next();
 };
 
+app.get("/", (req, res) => {
+	res.send(
+		req.oidc.isAuthenticated ? "Authenticated" : "UnAuthenticated/Logged out"
+	);
+});
+
 // enforce authentication and post id_token back
 app.get("/secure", requiresAuthWithParam, (req, res) => {
 	res.render("form-post", {
